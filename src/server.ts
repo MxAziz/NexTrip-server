@@ -21,6 +21,31 @@ const startServer = (): Server => {
 
 startServer();
 
+// ===================== signal termination / sigterm =====================
+process.on("SIGTERM", () => {
+    console.log("SIGTERM signal received-- server shutting down...");
+
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+        process.exit(1);
+    }
+})
+
+// ===================== SIGINT =====================
+// amora manual e server bondho korle ai function trigger hobe
+process.on("SIGINT", () => {
+    console.log("SIGINT signal received-- server shutting down...");
+
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+        process.exit(1);
+    }
+})
+
 // ===================== unhandled rejection error =====================
 // ata promise ar sathe connected
 process.on("unhandledRejection", (err) => {
