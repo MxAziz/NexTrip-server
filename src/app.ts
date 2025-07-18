@@ -1,8 +1,9 @@
-import { Application, } from "express";
+import { Application } from "express";
 import express from "express";
 import cors from "cors";
 import { router } from "./app/routes";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
+import notFound from "./app/middlewares/notFound";
 
 const app: Application = express();
 
@@ -17,6 +18,9 @@ app.get("/", (req, res) => {
   res.send("Api is running");
 });
 
-app.use(globalErrorHandler)
+app.use(globalErrorHandler) // ✅ Always after routes
+
+// global error handler ar niche
+app.use(notFound);
 
 export default app;
