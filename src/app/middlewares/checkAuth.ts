@@ -18,10 +18,11 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         if (!authRoles.includes(verifiedToken.role)) {
             throw new AppError(403, "You are not permitted to view this route!!!")
         }
-        req.User = verifiedToken
+        // req.User = verifiedToken
         next()
 
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.log("jwt error", error);
         next(error)
     }
