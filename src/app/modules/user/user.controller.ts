@@ -57,4 +57,5 @@ const getAllUsers = catchAsync(
 export const userController = {
     createUser,
     getAllUsers,
+    updateUser,
 }
