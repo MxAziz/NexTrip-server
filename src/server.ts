@@ -24,8 +24,8 @@ const startServer = async() => {
 }
 
 (async () => {
-    startServer();
-    seedSuperAdmin();
+    await startServer();
+    await seedSuperAdmin();
 })();
 
 // ===================== signal termination / sigterm =====================
