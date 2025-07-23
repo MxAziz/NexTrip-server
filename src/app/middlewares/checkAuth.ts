@@ -18,7 +18,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         if (!authRoles.includes(verifiedToken.role)) {
             throw new AppError(403, "You are not permitted to view this route!!!")
         }
-        // req.User = verifiedToken
+        req.user = verifiedToken
         next()
 
     } catch (error) {
