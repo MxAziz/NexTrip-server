@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import { Application } from "express";
 import express from "express";
 import cors from "cors";
@@ -8,6 +9,7 @@ import notFound from "./app/middlewares/notFound";
 const app: Application = express();
 
 // Middleware
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 

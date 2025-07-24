@@ -15,6 +15,11 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
         secure: false,
     })
 
+    res.cookie("accessToken", loginInfo.accessToken, {
+        httpOnly: true,
+        secure: false,
+    })
+
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
