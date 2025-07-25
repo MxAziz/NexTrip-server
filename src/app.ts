@@ -5,10 +5,13 @@ import cors from "cors";
 import { router } from "./app/routes";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
+import passport from "passport";
 
 const app: Application = express();
 
 // Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
