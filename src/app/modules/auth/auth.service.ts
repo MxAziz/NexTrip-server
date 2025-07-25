@@ -42,8 +42,8 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     }
 }
 
-const getNewAccessToken = async(refreshToken:string) => {
-    const newAccessToken = createNewAccessTokenWithRefreshToken(refreshToken)
+const getNewAccessToken = async(refreshToken : string) => {
+    const newAccessToken = await createNewAccessTokenWithRefreshToken(refreshToken)
     return {
         accessToken : newAccessToken,
     }
