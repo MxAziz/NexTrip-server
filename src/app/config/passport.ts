@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
 import passport from "passport";
 import { Strategy as googleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
 import { envVars } from "./env";
@@ -40,10 +42,24 @@ passport.use(
 
                 return done(null, user,)
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.log("google strategy error", error);
                 return done(error);
             }
         }
     )
 )
+
+
+passport.serializeUser((user: any, done: (err: any, id?: unknown) => void) => {
+    done(null, user._id)
+})
+
+passport.deserializeUser(async (id: string, done: any) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (error) {
+        console.log(error);
+        done(error);
+    }
+})
