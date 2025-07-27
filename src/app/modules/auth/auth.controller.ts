@@ -18,11 +18,12 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
     passport.authenticate("local", async (err: any, user: any, info: any) => {
 
         if (err) {
-            return next(new AppError(401, err))
+          // return next(err); --> ata o use kora jabe.
+          return next(new AppError(401, err));
         }
 
         if (!user) {
-            return next(new AppError(401, info.message))
+            return next(new AppError(401, info.message));
         }
 
         const userTokens = await createUserToken(user)

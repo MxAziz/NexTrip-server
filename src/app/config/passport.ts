@@ -23,9 +23,13 @@ passport.use(
           return done(null, false, { message: "user does not exist" });
         }
 
+        // if (!isUserExist) {
+        //    return done("User does not exist") --> avabeo sorasori done ar vitore error message ta deya jabe.
+        // }
+
         const isGoogleAuthenticated = isUserExist.auths.some(providerObjects => providerObjects.provider === "google")
 
-        if (isGoogleAuthenticated) {
+        if (isGoogleAuthenticated && !isUserExist.password) {
           return done(null, false, {message: "You have authenticated through google login. so if you want to login with credentials , then at first login with google and set a password for your gmail and then you can login with email and password"})
         }
 
@@ -36,6 +40,7 @@ passport.use(
         }
 
         return done(null, isUserExist);
+
       } catch (error) {
         console.log(error);
         done(error);
@@ -70,8 +75,8 @@ passport.use(
                         isVerified: true,
                         auths: [
                             {
-                                provider: "google",
-                                providerId: profile.id,
+                              provider: "google",
+                              providerId: profile.id,
                             }
                         ]
                     })
