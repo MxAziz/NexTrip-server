@@ -8,12 +8,13 @@ import notFound from "./app/middlewares/notFound";
 import passport from "passport";
 import expressSession from "express-session"
 import "./app/config/passport";
+import { envVars } from "./app/config/env";
 
 const app: Application = express();
 
 // Middleware
 app.use(expressSession({
-  secret: "your secret",
+  secret: envVars.EXPRESS_SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
 }))
