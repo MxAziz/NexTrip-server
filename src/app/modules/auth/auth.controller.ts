@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express"
 import httpStatus from "http-status-codes"
@@ -9,9 +10,42 @@ import { setAuthCookie } from "../../utils/setCookie"
 import { createUserToken } from "../../utils/userTokens"
 import { envVars } from "../../config/env"
 import { JwtPayload } from "jsonwebtoken"
+import passport from "passport"
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const loginInfo = await AuthServices.credentialsLogin(req.body)
+    // const loginInfo = await AuthServices.credentialsLogin(req.body)
+
+    passport.authenticate("local", async (err: any, user: any, info: any) => {
+
+        if (err) {
+            return next(new AppError(401, err))
+        }
+
+        if (!user) {
+            return next(new AppError(401, info.message))
+        }
+
+        const userTokens = await createUserToken(user)
+
+        // delete user.toObject().password
+
+        const { password: pass, ...rest } = user.toObject()
+
+
+        setAuthCookie(res, userTokens)
+
+        sendResponse(res, {
+            success: true,
+            statusCode: httpStatus.OK,
+            message: "User Logged In Successfully",
+            data: {
+                accessToken: userTokens.accessToken,
+                refreshToken: userTokens.refreshToken,
+                user: rest
+
+            },
+        })
+    })(req, res, next)
 
     // browser a refresh token set kora
     // res.cookie("refreshToken", loginInfo.refreshToken, {
@@ -24,14 +58,6 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
     //     secure: false,
     // })
 
-    setAuthCookie(res, loginInfo);
-
-    sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.OK,
-        message: "User Logged In Successfully",
-        data: loginInfo,
-    })
 })
 
 
