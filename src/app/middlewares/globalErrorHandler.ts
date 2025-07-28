@@ -5,16 +5,12 @@ import { envVars } from "../config/env"
 import { AppError } from "../errorHelpers/AppError";
 import { handlerDuplicateError } from "../helpers/handlerDuplicateError";
 import { handleCastError } from "../helpers/handleCastError";
+import { TErrorSources } from "../interfaces/error.types";
+import { handlerZodError } from "../helpers/handlerZodError";
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
-    const errorSources = [
-      {
-        // path: "isDeleted",
-        // message: "cast failed",
-      },
-    ];
-
+    let errorSources: TErrorSources[] = [];
     let statusCode = 500;
     let message = `something went wrong ${err.message}`;
 
@@ -29,7 +25,15 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
       const simplifiedError = handleCastError(err)
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message
-    } else if (err.name === "ValidatorError") {
+    }
+    else if (err.name === "ZodError") {
+        const simplifiedError = handlerZodError(err)
+        statusCode = simplifiedError.statusCode
+        message = simplifiedError.message
+        errorSources = simplifiedError.errorSources as TErrorSources[]
+    }
+
+    else if (err.name === "ValidatorError") {
       statusCode = 400;
       const errors = Object.values(err.errors);
 
