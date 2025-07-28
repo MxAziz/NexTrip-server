@@ -7,6 +7,7 @@ import { handlerDuplicateError } from "../helpers/handlerDuplicateError";
 import { handleCastError } from "../helpers/handleCastError";
 import { TErrorSources } from "../interfaces/error.types";
 import { handlerZodError } from "../helpers/handlerZodError";
+import { handlerValidationError } from "../helpers/handlerValidationError";
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
@@ -33,15 +34,11 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
         errorSources = simplifiedError.errorSources as TErrorSources[]
     }
     //Mongoose Validation Error
-    else if (err.name === "ValidatorError") {
-      statusCode = 400;
-      const errors = Object.values(err.errors);
-
-      errors.forEach((errorObject: any) => errorSources.push(errorObject.path({
-        path: errorObject.path,
-        message: errorObject.message,
-      })));
-      message = "validation error occurred";
+    else if (err.name === "ValidationError") {
+       const simplifiedError = handlerValidationError(err)
+        statusCode = simplifiedError.statusCode;
+        errorSources = simplifiedError.errorSources as TErrorSources[]
+        message = simplifiedError.message
     }
 
     if (err instanceof AppError) {
@@ -57,6 +54,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     message,
     errorSources,
     // err,
+    err: envVars.NODE_ENV === "development" ? err : null,
     stack: envVars.NODE_ENV === "development" ? err.stack : null,
   });
 }
