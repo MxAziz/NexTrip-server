@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express"
 import { envVars } from "../config/env"
 import { AppError } from "../errorHelpers/AppError";
 import { handlerDuplicateError } from "../helpers/handlerDuplicateError";
+import { handleCastError } from "../helpers/handleCastError";
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
@@ -25,8 +26,9 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     }
     // object id error / cast error
     else if (err.name === "CastError") {
-      statusCode = 400;
-      message = "invalid mongodb objectId. please provide a valid id";
+      const simplifiedError = handleCastError(err)
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message
     } else if (err.name === "ValidatorError") {
       statusCode = 400;
       const errors = Object.values(err.errors);
@@ -35,7 +37,6 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
         path: errorObject.path,
         message: errorObject.message,
       })));
-      // console.log(errors);
       message = "validation error occurred";
     }
 
