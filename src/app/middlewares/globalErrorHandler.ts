@@ -3,6 +3,7 @@
 import { NextFunction, Request, Response } from "express"
 import { envVars } from "../config/env"
 import { AppError } from "../errorHelpers/AppError";
+import { handlerDuplicateError } from "../helpers/handlerDuplicateError";
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
@@ -18,9 +19,9 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
 
   // duplicate error
     if (err.code === 11000) {
-      const matchedArray = err.message.match(/"([^"]*)"/);
-      statusCode = 400;
-      message = `${matchedArray[1]} already exists`;
+      const simplifiedError = handlerDuplicateError(err);
+      statusCode = simplifiedError.statusCode;
+      message = simplifiedError.message
     }
     // object id error / cast error
     else if (err.name === "CastError") {
@@ -34,7 +35,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
         path: errorObject.path,
         message: errorObject.message,
       })));
-      console.log(errors);
+      // console.log(errors);
       message = "validation error occurred";
     }
 
