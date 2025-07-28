@@ -32,7 +32,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
         message = simplifiedError.message
         errorSources = simplifiedError.errorSources as TErrorSources[]
     }
-
+    //Mongoose Validation Error
     else if (err.name === "ValidatorError") {
       statusCode = 400;
       const errors = Object.values(err.errors);
