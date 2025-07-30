@@ -15,6 +15,12 @@ const createTour = catchAsync(
     }
 )
 
+const getAllTours = catchAsync(
+    async (req: Request, res: Response) => [
+        const result = await tourService
+    ]
+)
+
 
 export const tourController = {
     createTour,
