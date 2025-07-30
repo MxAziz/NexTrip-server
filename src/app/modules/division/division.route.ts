@@ -10,6 +10,7 @@ import {
 
 const router = Router()
 
+// api/v1/division/...
 router.post(
     "/create",
     checkAuth(Role.ADMIN, Role.SUPER_ADMIN),

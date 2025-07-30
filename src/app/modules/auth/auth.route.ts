@@ -6,6 +6,7 @@ import passport from "passport";
 
 const router = Router()
 
+// api/v1/auth/...
 router.post("/login", AuthControllers.credentialsLogin)
 router.post("/refresh-token", AuthControllers.getNewAccessToken)
 router.post("/logout", AuthControllers.logout)
