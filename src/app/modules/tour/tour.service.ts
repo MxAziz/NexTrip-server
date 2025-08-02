@@ -49,11 +49,19 @@ const createTourType = async (payload: ITourType) => {
     return await TourType.create({ name });
 };
 
+
+const getSingleTourType = async (id: string) => {
+    const tourType = await TourType.findById(id);
+    return {
+        data: tourType
+    };
+};
+
 export const tourService = {
     createTour,
     updateTour,
     getSingleTour,
     deleteTour,
     createTourType,
-
+    getSingleTourType,
 }
