@@ -44,8 +44,22 @@ const deleteTour = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const getSingleTourType = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await tourService.getSingleTourType(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Tour type retrieved successfully',
+        data: result,
+    });
+});
+
+
 export const tourController = {
     createTour,
     getSingleTour,
     deleteTour,
+    getSingleTourType,
+
 }
