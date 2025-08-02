@@ -9,4 +9,8 @@ const router = express.Router();
 // api/v1/tour/...
 router.get("/", tourController.createTour);
 
+
+/* ------------------ TOUR TYPE ROUTES -------------------- */
+router.get("/tour-types/:id", tourController.getSingleTourType);
+
 export const TourRoutes = router
