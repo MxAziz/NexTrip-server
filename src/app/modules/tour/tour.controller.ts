@@ -102,6 +102,7 @@ export const tourController = {
     getAllTours,
     getSingleTour,
     deleteTour,
+
     getSingleTourType,
     getAllTourTypes,
     updateTourType,

@@ -127,6 +127,7 @@ export const tourService = {
     updateTour,
     getSingleTour,
     deleteTour,
+
     createTourType,
     getAllTourTypes,
     getSingleTourType,
