@@ -4,7 +4,7 @@ import { tourController } from './tour.controller';
 import { checkAuth } from '../../middlewares/checkAuth';
 import { Role } from '../user/user.interface';
 import { validateRequest } from '../../middlewares/validateRequest';
-import { createTourZodSchema, updateTourZodSchema } from './tour.validation';
+import { createTourTypeZodSchema, createTourZodSchema, updateTourZodSchema } from './tour.validation';
 
 
 const router = express.Router();
@@ -37,6 +37,24 @@ router.delete("/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), tourController.de
 
 
 /* ------------------ TOUR TYPE ROUTES -------------------- */
+router.get("/tour-types", tourController.getAllTourTypes);
+
+router.post(
+    "/create-tour-type",
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    validateRequest(createTourTypeZodSchema),
+    tourController.createTourType
+);
+
 router.get("/tour-types/:id", tourController.getSingleTourType);
+
+router.patch(
+    "/tour-types/:id",
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    validateRequest(createTourTypeZodSchema),
+    tourController.updateTourType
+);
+
+router.delete("/tour-types/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), tourController.deleteTourType);
 
 export const TourRoutes = router
