@@ -48,7 +48,14 @@ const getAllTours = async (query: Record<string, string>) => {
         .fields()
         .paginate()
 
-    // const meta = await queryBuilder.getMeta()
+    const totalTours = await Tour.countDocuments(searchQuery).find(filter);
+
+    const meta = {
+        page,
+        limit,
+        total: totalTours,
+        totalPages: Math.ceil(totalTours / limit),
+    }
 
     const [data, meta] = await Promise.all([
         tours.build(),
