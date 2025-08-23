@@ -15,7 +15,6 @@ const createTour = async (payload: ITour) => {
     return tour;
 }
 
-
 const getAllTours = async (query: Record<string, string>) => {
 
     const queryBuilder = new QueryBuilder(Tour.find(), query);
@@ -110,6 +109,7 @@ const updateTourType = async (id: string, payload: ITourType) => {
     const updatedTourType = await TourType.findByIdAndUpdate(id, payload, { new: true });
     return updatedTourType;
 };
+
 const deleteTourType = async (id: string) => {
     const existingTourType = await TourType.findById(id);
     if (!existingTourType) {
