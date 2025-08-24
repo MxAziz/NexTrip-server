@@ -61,7 +61,7 @@ export class QueryBuilder<T> {
     }
 
     build() {
-        return this.modelQuery;
+      return this.modelQuery;
     }
 
     async getMeta() {
