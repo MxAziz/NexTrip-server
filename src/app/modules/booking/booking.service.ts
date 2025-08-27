@@ -10,16 +10,19 @@ import { Tour } from "../tour/tour.model";
 
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
-    try {
-        const transactionId = getTransactionId();
+    const transactionId = getTransactionId();
 
-        const user = await User.findById(userId);
+    const session = await Booking.startSession();
+    session.startTransaction();
+
+    try {
+        const user = await User.findById(userId, session);
 
         if (!user?.phone || !user.address) {
             throw new AppError(httpStatus.BAD_REQUEST, "Please Update Your Profile to Book a Tour.");
         }
 
-        const tour = await Tour.findById(payload.tour).select("costFrom")
+        const tour = await Tour.findById(payload.tour, session).select("costFrom")
 
         if (!tour?.costFrom) {
             throw new AppError(httpStatus.BAD_REQUEST, "No Tour cost available!");
@@ -32,18 +35,18 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
             user: userId,
             status: BOOKING_STATUS.PENDING,
             ...payload
-        })
+        }, {session})
 
         const payment = await Payment.create({
-            booking: booking._id,
+            booking: booking[0]._id,
             status: PAYMENT_STATUS.UNPAID,
             transactionId: transactionId,
             amount: amount,
-        })
+        }, {session})
 
         const updatedBooking = await Booking.findByIdAndUpdate(
-          booking._id,
-          { payment: payment._id },
+          booking[0]._id,
+          { payment: payment[0]._id },
           { new: true, runValidators: true }
         )
           .populate("user", "name email phone address")
