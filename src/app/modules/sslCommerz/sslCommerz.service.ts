@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios"
 import { envVars } from "../../config/env"
 import { ISSLCommerz } from "./sslCommerz.interface"
+import { AppError } from "../../errorHelpers/AppError"
+import httpStatus from 'http-status-codes';
 
-const sslPaymentInit = (payload : ISSLCommerz) => {
+const sslPaymentInit = async (payload: ISSLCommerz) => {
 
-    const data = {
+    try {
+        const data = {
             store_id: envVars.SSL.STORE_ID,
             store_passwd: envVars.SSL.STORE_PASS,
             total_amount: payload.amount,
@@ -35,6 +40,21 @@ const sslPaymentInit = (payload : ISSLCommerz) => {
             ship_postcode: 1000,
             ship_country: "N/A",
         }
+
+        const response = await axios({
+            method: "POST",
+            url: envVars.SSL.SSL_PAYMENT_API,
+            data: data,
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+
+        return response.data;
+
+    } catch (error: any) {
+        // eslint-disable-next-line no-console
+        console.log("Payment Error Occured", error);
+        throw new AppError(httpStatus.BAD_REQUEST, error.message)
+    }
 }
 
 export const SSLService = {
