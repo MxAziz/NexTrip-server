@@ -24,6 +24,7 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 
+// baseURL/api/v1
 app.use('/api/v1', router)
 
 // test route
@@ -33,7 +34,6 @@ app.get("/", (req, res) => {
 
 app.use(globalErrorHandler) // ✅ Always after routes
 
-// global error handler ar niche
-app.use(notFound);
+app.use(notFound);  // global error handler ar niche
 
 export default app;
